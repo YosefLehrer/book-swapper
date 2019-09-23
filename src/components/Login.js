@@ -13,35 +13,34 @@ class Login extends React.Component {
       if(!this.state.username || !this.state.password){
        alert('Username and/or password cannot be blank')
         } else {
-            fetch("http://localhost:3000/login", {
-                method: "POST",
-                headers: {
-                  "Accept": "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  username: this.state.username,
-                  password: this.state.password
-                })
-              })
-              .then(resp=>resp.json())
-              .then(data=>{
-                  console.log(data)
-                  if(data.error){
-                      alert(data.error)
-                    } else {
-                      _storeData = async () => {
-                          try {
-                              await AsyncStorage.setItem('token', data.token);
-                            } catch (error) {
-                                console.log("Async setItem error")
-                            }
-                        }
-                        _storeData()
-                        this.props.navigation.navigate('User')
+          fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              username: this.state.username,
+              password: this.state.password
+            })
+          })
+          .then(resp=>resp.json())
+          .then(data=>{
+            if(data.error){
+              alert(data.error)
+            } else {
+              _storeData = async () => {
+                try {
+                  await AsyncStorage.setItem('token', data.token);
+                } catch (error) {
+                  console.log("Async setItem error")
+                }
+              }
+              _storeData()
+              this.props.autoLogin()
                   }
               })
-              .catch(() => alert('Sorry, something went wrong'))
+          .catch(() => alert('Sorry, something went wrong'))
         }
     }
     

@@ -3,9 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 import UserShowPage from './src/components/UserShowPage'
+import AppNavigator from './src/AppNavigator'
 
 import rootReducer from './src/reducer'
 import TopLevel from './src/TopLevel';
@@ -17,24 +16,14 @@ class App extends React.Component {
   render(){
     return (
         <Provider store={store} >
-            <TopLevel />
+          < AppNavigator />
+            {/* <TopLevel navigation={this.props.navigation}/> */}
         </Provider>
     );
   }
 }
 
-const AppNavigator = createStackNavigator({
-  Home: {
-      screen: App,
-  },
-  User: {
-      screen: UserShowPage,
-  },
-}, {
-  initialRouteName: 'Home',
-});
-
-export default createAppContainer(AppNavigator);
+export default App
 
 
 
