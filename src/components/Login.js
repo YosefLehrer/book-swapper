@@ -29,18 +29,14 @@ class Login extends React.Component {
             if(data.error){
               alert(data.error)
             } else {
-              _storeData = async () => {
-                try {
-                  await AsyncStorage.setItem('token', data.token);
-                } catch (error) {
-                  console.log("Async setItem error")
-                }
-              }
-              _storeData()
-              this.props.autoLogin()
+              AsyncStorage.setItem('token', data.token)
+              .then(resp => {
+                console.log("IN THE LOGIN PROPS", resp, this.props.navigation)
+                this.props.navigation.state.params.autoLogin()
+              })
                   }
               })
-          .catch(() => alert('Sorry, something went wrong'))
+          .catch(() => alert('Sorry, something went wrong in the login process'))
         }
     }
     
@@ -48,20 +44,22 @@ class Login extends React.Component {
         return (
             
             <View style={styles.formContainer}>
-                <TextInput 
-                placeholder="username"
-                value={this.state.username}
-                autoCapitalize = 'none'
-                onChangeText={(text) => this.setState({username: text})}
-                />
-                <Text></Text>
-                <TextInput 
-                secureTextEntry={true}
-                placeholder="password"
-                value={this.state.password}
-                onChangeText={(text) => this.setState({password: text})}
-                />
-                <Button title="Login" onPress={this.handleLogin}/>
+              <TextInput 
+              placeholder="username"
+              value={this.state.username}
+              autoCapitalize = 'none'
+              onChangeText={(text) => this.setState({username: text})}
+              />
+              <Text></Text>
+              <TextInput 
+              secureTextEntry={true}
+              placeholder="password"
+              value={this.state.password}
+              onChangeText={(text) => this.setState({password: text})}
+              />
+              <Button title="Login" onPress={this.handleLogin}/>
+              <Text>New User? </Text>
+              <Button title="Sign Up" onPress={() => this.props.navigation.navigate('Signup', {autoLogin: this.props.autoLogin})}/>
             </View>
     );
 

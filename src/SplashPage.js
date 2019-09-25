@@ -1,22 +1,16 @@
 import React from 'react';
 import { Text, View, AsyncStorage } from 'react-native';
 import {connect} from 'react-redux'
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 
-import Login from './components/Login';
-import UserShowPage from './components/UserShowPage';
-import SearchPage from './components/SearchPage'
-
-class TopLevel extends React.Component {
+class SplashPage extends React.Component {
     
     componentDidMount(){
         this.autoLogin()
     }
     
     autoLogin = () => {
-     _retrieveData = async () => {
-      try {
+        _retrieveData = async () => {
+            try {
           const value = await AsyncStorage.getItem('token');
              if (value !== null) {
                fetch(`http://localhost:3000/autologin`, {
@@ -29,24 +23,36 @@ class TopLevel extends React.Component {
                     .then(data => {
                         if (data.error){
                             alert(date.error)
+                            this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }else {
-                            AsyncStorage.setItem('user', data.user_name)
-                            this.props.navigation.navigate('User', {User: data})
+                            // AsyncStorage.setItem('user', data.user_name)
+                            this.props.navigation.navigate('User', {User: data, autoLogin: this.autoLogin})
+                            // this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }
                     }
                     )
+                } else {
+                    this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                 }
             } catch (error) {
                 alert("user not found")
             }
-        };
+        }
         _retrieveData()
     }
     
     render(){
         return (
         <View >
-          <Login navigation={this.props.navigation} autoLogin={this.autoLogin}/>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+            <Text>SPLASHPAGE</Text>
+          {/* <Login navigation={this.props.navigation} autoLogin={this.autoLogin}/> */}
           {/* <UserShowPage /> */}
           {/* <SearchPage /> */}
         </View>
@@ -61,4 +67,4 @@ const mdp = () => {
     return {saveUser: (data) => dispatch({type: "SAVEUSER", payload: data})}
 }
 
-export default connect(msp, mdp)(TopLevel)
+export default connect(msp, mdp)(SplashPage)

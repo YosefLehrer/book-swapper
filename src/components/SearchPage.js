@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, TextInput, AsyncStorage, ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import Book from './Book'
@@ -19,26 +19,42 @@ class SearchPage extends Component {
     }
 
     handleAddingToLibrary = (book) => {
-        _retrieveData = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                    if (token !== null) {
-                        fetch(`http://localhost:3000/owned_books`, {
-                            method: 'POST',
-                            headers: {
-                                "accept": 'application/json',
-                                "content-type": 'application/json'
-                            },
-                            body: JSON.stringify({
-                                user_token: token,
-                                book_id: book.id
-                            })
-                        })}
-                    } catch (error) {
-                        alert("user not found")
+        const isbn = book.volumeInfo.industryIdentifiers.find(identifier =>identifier.type === "ISBN_10").identifier
+      _retrieveData = async () => {
+        try {
+          const token = await AsyncStorage.getItem('token')
+            if (token !== null) {
+              console.log(book)
+              fetch(`http://localhost:3000/owned_books`, {
+                method: 'POST',
+                headers: {
+                    "accept": 'application/json',
+                    "content-type": 'application/json'
+                },
+                body: JSON.stringify({
+                    user_token: token,
+                    book: {
+                        title: book.volumeInfo.title,
+                        author: book.volumeInfo.authors[0],
+                        ISBN: isbn,
+                        img: book.volumeInfo.imageLinks.thumbnail,
+                        description: book.volumeInfo.description,
+                        publisheddate: book.volumeInfo.publishedDate,
+                        pagecount: book.volumeInfo.pageCount,
+                        rating: book.volumeInfo.averageRating,
+                        infolink: book.volumeInfo.infoLink,
+                        googleid: book.id
                     }
+                })
+              })
+              .then(resp => resp.json())
+              .then(data => console.log(data))
+            }
+        } catch (error) {
+            alert("user not found")
         }
-        _retrieveData()
+      }
+      _retrieveData()
     }
 
     render(){
@@ -62,7 +78,9 @@ class SearchPage extends Component {
                 <TouchableOpacity onPress={this.handleSearch}>
                     <Text>Search</Text>
                 </TouchableOpacity>
+                <ScrollView>
                 {mappedBooksArray}
+                </ScrollView>
             </View>
         )
     }
