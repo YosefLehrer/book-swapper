@@ -5,17 +5,22 @@ import { prototype } from 'uuid-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Book =(props) => {
-  console.log("props IN book", props)
+
+  const findComponentOrigin = () => {
+    props.handleAddingToLibrary ? props.handleAddingToLibrary : "nothing"
+  }
   return (
     <View style={styles.bookContainer}>
       <Text>Title: {props.title}</Text>
       <Text>Author: {props.author}</Text>
       {props.img ? <Image style={{width: 100, height: 100}} source={{uri: props.img}}/> : null}
-      <TouchableOpacity onPress={() => props.navigation.navigate('BookShowPage', {book: props.book})}>
+      <TouchableOpacity onPress={() => props.navigation.navigate('BookShowPage', {
+        book: props.book,
+        User: props.navigation.state.params.User,
+        handleAddingToLibrary: props.handleAddingToLibrary ? props.handleAddingToLibrary : null
+        })}>
         <Text>Details</Text>
       </TouchableOpacity>
-      {props.handleAddingToLibrary ? <Button onPress={() => props.handleAddingToLibrary(props)}
-          title="Add this Book to your Library"/> : null}
     </View>
   );
 }

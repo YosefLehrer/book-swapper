@@ -25,12 +25,13 @@ class SplashPage extends React.Component {
                             alert(date.error)
                             this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }else {
-                            // AsyncStorage.setItem('user', data.user_name)
+                            console.log("TRYING TO FIND THE REDUX REDUCER: ", this.props)
                             this.props.navigation.navigate('User', {User: data, autoLogin: this.autoLogin})
                             // this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }
                     }
                     )
+                    .catch((error) => console.log("ERROR", error))
                 } else {
                     this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                 }

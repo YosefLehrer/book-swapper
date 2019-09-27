@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, AsyncStorage, Button, FlatList, StyleSheet } from 'react-native'
+import { View, Text, AsyncStorage, Button, FlatList, StyleSheet, ActionSheetIOS } from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 // import { createAppContainer } from 'react-navigation';
@@ -44,12 +44,24 @@ class UserShowPage extends React.Component {
        _retrieveData()
    }
    handleLogout = () => {
-       AsyncStorage.removeItem('token')
-       .then(data => {
-           this.setState({nothing: null})
-           this.props.navigation.navigate('Login')
-       })
-   }
+       
+       ActionSheetIOS.showActionSheetWithOptions(
+           {
+               options: ['Cancel', 'Logout'],
+               destructiveButtonIndex: 1,
+               cancelButtonIndex: 0,
+            },
+            (buttonIndex) => {
+                if (buttonIndex === 1) {
+                AsyncStorage.removeItem('token')
+            .then(data => {
+                this.setState({nothing: null})
+                this.props.navigation.navigate('Login', {autoLogin: this.props.navigation.state.params.autoLogin})
+            })
+                }
+            },
+    );
+}
    render(){
        const user = this.props.navigation.state.params.User.user_name
        const mappedUserLibrary = this.state.userLibrary.map(book => {
@@ -67,8 +79,8 @@ class UserShowPage extends React.Component {
                    return <Book key={item.props.book.id} book={item.props.book}title={item.props.book.title}author={item.props.book.author}ISBN={item.props.ISBN}img={item.props.book.img}description={item.props.book.description}publisheddate={item.props.book.publishedDate}pagecount={item.props.book.pageCount}rating={item.props.book.rating}infolink={item.props.book.infoLink}googleid={item.props.book.googleid} navigation={this.props.navigation}/>
                    }}
                    />
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search')} >
-                       <Text style={{textAlign: 'center'}} >Search Page</Text>
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {User: user})} >
+                       <Text style={{textAlign: 'center'}} >Search a Book</Text>
                    </TouchableOpacity>
                    <Button title="logout" onPress={this.handleLogout}/>
                </View>

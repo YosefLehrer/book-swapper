@@ -63,6 +63,7 @@ class Login extends React.Component {
               placeholder="password"
               value={this.state.password}
               returnKeyType="go"
+              onSubmitEditing={this.handleLogin}
               ref={(input) => this.passwordInput = input}
               onChangeText={(text) => this.setState({password: text})}
               />

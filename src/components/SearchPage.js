@@ -1,25 +1,25 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, AsyncStorage, ScrollView, FlatList } from 'react-native'
+import { View, Text, TextInput, AsyncStorage, ScrollView, FlatList, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Icon } from 'react-native-elements'
 
 import Book from './Book'
 class SearchPage extends Component {
     state = {
         searchTerm: "",
-        books: []
+        books: [],
     }
 
     handleSearch = () => {
         fetch(`http://localhost:3000/books/search/q=${this.state.searchTerm}`)
         .then(resp => resp.json())
         .then(data => {
-            this.setState({books: data})
-            console.log("straight from fetch", data)
+            this.setState({books: data, searchTerm: ""})
         })
+        .catch(() => alert("Sorry, no books were found"))
     }
 
     handleAddingToLibrary = (book) => {
-        console.log("Book in the adding fetch", book)
       _retrieveData = async () => {
         try {
           const token = await AsyncStorage.getItem('token')
@@ -57,50 +57,67 @@ class SearchPage extends Component {
 
     render(){
         return (
-            <View>
-                <Text></Text>
-                <TextInput 
-                placeholder="Search"
-                value={this.state.searchTerm}
-                autoCapitalize = 'none'
-                onChangeText={(text) => this.setState({searchTerm: text})}
-                style={{borderStartWidth: 1, borderColor: '#fff'}}
-                />
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <TouchableOpacity onPress={this.handleSearch}>
-                    <Text>Search</Text>
-                </TouchableOpacity>
+            <View style={styles.container}>
+                <View style={styles.searchContainer}>
+                    <Icon name='search' style={styles.icon} size={40}/>
+                    <TextInput 
+                    placeholder={`Search`}
+                    value={this.state.searchTerm}
+                    returnKeyType='search'
+                    autoCapitalize = 'none'
+                    clearButtonMode='while-editing'
+                    autoFocus={true}
+                    autoCorrect={false}
+                    onSubmitEditing={this.handleSearch}
+                    onChangeText={(text) => this.setState({searchTerm: text})}
+                    style={styles.input}
+                    />
+                </View>
                 <FlatList
                 data={this.state.books}
                 renderItem={({item}) => {
-                return <Book key={item.googleid} book={item} handleAddingToLibrary={this.handleAddingToLibrary} 
-
-
-                title={item.title}
-                author={item.author}
-                // ISBN={item.props.ISBN}
-                img={item.img}
-                description={item.description}
-                publisheddate={item.publishedDate}
-                pagecount={item.pageCount}
-                rating={item.rating}
-                infolink={item.infoLink}
-                googleid={item.googleid}
-                navigation={this.props.navigation}
-
-
-
+                return <Book 
+                    key={item.googleid} book={item} 
+                    handleAddingToLibrary={this.handleAddingToLibrary} 
+                    title={item.title}
+                    author={item.author}
+                    img={item.img}
+                    description={item.description}
+                    publisheddate={item.publishedDate}
+                    pagecount={item.pageCount}
+                    rating={item.rating}
+                    infolink={item.infoLink}
+                    googleid={item.googleid}
+                    navigation={this.props.navigation}
                 />}}
                 />
-                {/* <ScrollView>
-                {mappedBooksArray}
-                </ScrollView> */}
             </View>
         )
     }
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#99b19c',
+        padding: 10,
+    },
+    searchContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
+    icon: {
+        marginTop: 100,
+    },
+    input: {
+        borderStartWidth: 1,
+        backgroundColor: '#fff',
+        borderRadius: 30,
+        paddingLeft: 14,
+        height: 40,
+        flexGrow: 1,
+    }
+})
 export default SearchPage
