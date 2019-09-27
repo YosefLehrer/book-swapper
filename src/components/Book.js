@@ -1,37 +1,39 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button, Platform } from 'react-native';
 import { connect } from 'react-redux'
+import { prototype } from 'uuid-js';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Book =(props) => {
-  let authorList
-  if (props.book.volumeInfo.authors) {
-    authorList = props.book.volumeInfo.authors.map(author => `${author} `)
-  }
-  let imageLink
-  if (props.book.volumeInfo.imageLinks){
-    imageLink = props.book.volumeInfo.imageLinks.thumbnail
-  }
-        return (
-          <View >
-            <Text>Title: {props.book.volumeInfo.title}</Text>
-            {/* <Text>{authorList > 1 ? "Authors: " : "Author: "}{authorList}</Text> */}
-            {authorList ? <Text>{authorList.length > 1 ? "Authors: " : "Author: "}{authorList}</Text> : null}
-            {imageLink ? <Image style={{width: 100, height: 100}} source={{uri: imageLink}}/> : null}
-            <Button onPress={() => props.handleAddingToLibrary(props.book)}
-                title="Add this Book to your Library"/>
-          </View>
-        );
-      }
-      {/* <Text>{props.counter}</Text>
-          <Button onPress={props.increase} title="Increase"/>
-          <Button onPress={props.decrease} title="Decrease"/> */}
-// function msp(state){
-//     return {counter: state.counter} 
-// }
+  console.log("props IN book", props)
+  return (
+    <View style={styles.bookContainer}>
+      <Text>Title: {props.title}</Text>
+      <Text>Author: {props.author}</Text>
+      {props.img ? <Image style={{width: 100, height: 100}} source={{uri: props.img}}/> : null}
+      <TouchableOpacity onPress={() => props.navigation.navigate('BookShowPage', {book: props.book})}>
+        <Text>Details</Text>
+      </TouchableOpacity>
+      {props.handleAddingToLibrary ? <Button onPress={() => props.handleAddingToLibrary(props)}
+          title="Add this Book to your Library"/> : null}
+    </View>
+  );
+}
 
-// function mdp(dispatch){
-//     return {increase: () => dispatch({type: "INCREASE"}), decrease: () => dispatch({type: "DECREASE"})}
-// }
-
-// export default connect(msp, mdp)(Book)
+const styles = StyleSheet.create({
+  bookContainer: {
+    flex: 1,
+    maxWidth: 130,
+    marginTop: 15,
+    marginRight: 7.5,
+    marginBottom: 15,
+    marginLeft: 7.5,
+    backgroundColor: '#F1D6B8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  }
+})
 export default Book
+  
+

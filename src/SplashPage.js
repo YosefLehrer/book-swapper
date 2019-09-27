@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
+import { Text, View, AsyncStorage, StyleSheet, Image } from 'react-native';
 import {connect} from 'react-redux'
 
 class SplashPage extends React.Component {
@@ -43,22 +43,30 @@ class SplashPage extends React.Component {
     
     render(){
         return (
-        <View >
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-            <Text>SPLASHPAGE</Text>
-          {/* <Login navigation={this.props.navigation} autoLogin={this.autoLogin}/> */}
-          {/* <UserShowPage /> */}
-          {/* <SearchPage /> */}
+        <View style={styles.container}>
+            <View style={styles.logoContainer}>
+            <Image source={require('./images/booklogo.png')} style={styles.logo}/>
+            </View>
         </View>
-        );
+        )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#55efc4"
+    },
+    logoContainer: {
+        alignItems: 'center',
+        flexGrow: 1,
+        justifyContent: 'center'
+    },
+    logo: {
+        width: 100,
+        height: 100
+    }
+})
 const msp = (state) => {
     return {user: state.user}
 }

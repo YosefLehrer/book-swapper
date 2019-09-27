@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, Image, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 class Login extends React.Component {
@@ -43,33 +44,63 @@ class Login extends React.Component {
     render(){
         return (
             
-            <View style={styles.formContainer}>
-              <TextInput 
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+              <View style={styles.formContainer}>
+              <TextInput
+              style={styles.input}
               placeholder="username"
               value={this.state.username}
+              returnKeyType="next"
+              onSubmitEditing={() => this.passwordInput.focus()}
               autoCapitalize = 'none'
+              autoCorrect={false}
               onChangeText={(text) => this.setState({username: text})}
               />
               <Text></Text>
-              <TextInput 
+              <TextInput
+              style={styles.input}
               secureTextEntry={true}
               placeholder="password"
               value={this.state.password}
+              returnKeyType="go"
+              ref={(input) => this.passwordInput = input}
               onChangeText={(text) => this.setState({password: text})}
               />
-              <Button title="Login" onPress={this.handleLogin}/>
-              <Text>New User? </Text>
+              <TouchableOpacity onPress={this.handleLogin} style={styles.loginButton}>
+                <Text>Login</Text>
+              </TouchableOpacity>
               <Button title="Sign Up" onPress={() => this.props.navigation.navigate('Signup', {autoLogin: this.props.autoLogin})}/>
-            </View>
+              </View>
+            </KeyboardAvoidingView>
     );
-
     }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    textAlign: 'center'
+    // textAlign: 'center'
+  },
+  formContainer: {
+    // textAlign: 'left',
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#55efc4'
+  },
+  input: {
+    height: 40,
+    // borderRadius: 13,
+    backgroundColor: 'red',//'rgba(85,239,196,0.8)',
+    paddingVertical: 15,
+    paddingHorizontal: 100
+  },
+  loginButton: {
+    backgroundColor: '#00b894',
+    paddingVertical: 15,
+    paddingHorizontal: 100,
+    marginTop: 15,
+    fontWeight: '700',
   }
 });
 

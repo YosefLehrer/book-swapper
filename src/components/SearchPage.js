@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, AsyncStorage, ScrollView } from 'react-native'
+import { View, Text, TextInput, AsyncStorage, ScrollView, FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import Book from './Book'
@@ -13,18 +13,17 @@ class SearchPage extends Component {
         fetch(`http://localhost:3000/books/search/q=${this.state.searchTerm}`)
         .then(resp => resp.json())
         .then(data => {
-            // console.log(data)
             this.setState({books: data})
+            console.log("straight from fetch", data)
         })
     }
 
     handleAddingToLibrary = (book) => {
-        const isbn = book.volumeInfo.industryIdentifiers.find(identifier =>identifier.type === "ISBN_10").identifier
+        console.log("Book in the adding fetch", book)
       _retrieveData = async () => {
         try {
           const token = await AsyncStorage.getItem('token')
             if (token !== null) {
-              console.log(book)
               fetch(`http://localhost:3000/owned_books`, {
                 method: 'POST',
                 headers: {
@@ -34,16 +33,15 @@ class SearchPage extends Component {
                 body: JSON.stringify({
                     user_token: token,
                     book: {
-                        title: book.volumeInfo.title,
-                        author: book.volumeInfo.authors[0],
-                        ISBN: isbn,
-                        img: book.volumeInfo.imageLinks.thumbnail,
-                        description: book.volumeInfo.description,
-                        publisheddate: book.volumeInfo.publishedDate,
-                        pagecount: book.volumeInfo.pageCount,
-                        rating: book.volumeInfo.averageRating,
-                        infolink: book.volumeInfo.infoLink,
-                        googleid: book.id
+                        title: book.title,
+                        author: book.author,
+                        img: book.img,
+                        description: book.description,
+                        publisheddate: book.publisheddate,
+                        pagecount: book.pagecount,
+                        rating: book.rating,
+                        infolink: book.infolink,
+                        googleid: book.googleid,
                     }
                 })
               })
@@ -58,9 +56,6 @@ class SearchPage extends Component {
     }
 
     render(){
-        const mappedBooksArray = this.state.books.map(book => {
-            return <Book key={book.id} book={book} handleAddingToLibrary={this.handleAddingToLibrary} />
-        })
         return (
             <View>
                 <Text></Text>
@@ -78,9 +73,31 @@ class SearchPage extends Component {
                 <TouchableOpacity onPress={this.handleSearch}>
                     <Text>Search</Text>
                 </TouchableOpacity>
-                <ScrollView>
+                <FlatList
+                data={this.state.books}
+                renderItem={({item}) => {
+                return <Book key={item.googleid} book={item} handleAddingToLibrary={this.handleAddingToLibrary} 
+
+
+                title={item.title}
+                author={item.author}
+                // ISBN={item.props.ISBN}
+                img={item.img}
+                description={item.description}
+                publisheddate={item.publishedDate}
+                pagecount={item.pageCount}
+                rating={item.rating}
+                infolink={item.infoLink}
+                googleid={item.googleid}
+                navigation={this.props.navigation}
+
+
+
+                />}}
+                />
+                {/* <ScrollView>
                 {mappedBooksArray}
-                </ScrollView>
+                </ScrollView> */}
             </View>
         )
     }
