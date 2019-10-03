@@ -28,7 +28,7 @@ const Book =(props) => {
 const styles = StyleSheet.create({
   bookContainer: {
     flex: 1,
-    maxWidth: 130,
+    maxWidth: 140,
     marginTop: 15,
     marginRight: 7.5,
     marginBottom: 15,

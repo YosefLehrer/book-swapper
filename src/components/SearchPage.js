@@ -8,6 +8,7 @@ class SearchPage extends Component {
     state = {
         searchTerm: "",
         books: [],
+        nothing: null
     }
 
     handleSearch = () => {
@@ -19,7 +20,8 @@ class SearchPage extends Component {
         .catch(() => alert("Sorry, no books were found"))
     }
 
-    handleAddingToLibrary = (book) => {
+    handleAddingToLibrary = (paramsBook) => {
+        const book = paramsBook.navigation.state.params.book
       _retrieveData = async () => {
         try {
           const token = await AsyncStorage.getItem('token')
@@ -46,7 +48,9 @@ class SearchPage extends Component {
                 })
               })
               .then(resp => resp.json())
-              .then(data => console.log(data))
+              .then(data => {
+                  this.props.navigation.navigate('User')
+                })
             }
         } catch (error) {
             alert("user not found")
