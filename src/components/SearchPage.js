@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, AsyncStorage, ScrollView, FlatList, StyleSheet } from 'react-native'
+import { View, Text, TextInput, AsyncStorage, ScrollView, FlatList, StyleSheet, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Icon } from 'react-native-elements'
 
@@ -49,6 +49,11 @@ class SearchPage extends Component {
               })
               .then(resp => resp.json())
               .then(data => {
+                  if (data.alreadyInLibrary){
+                      Alert.alert("Whoops", data.alreadyInLibrary)
+                  } else if (data.successfullyAddedToLibrary){
+                      Alert.alert("Hooray", data.successfullyAddedToLibrary)
+                  }
                   this.props.navigation.navigate('User')
                 })
             }

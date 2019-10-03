@@ -28,7 +28,7 @@ class UserShowPage extends React.Component {
                 })
                 .then(resp => resp.json())
                 .then(data => {
-                    console.log(data)
+                    console.log("user show page fetch for library and trades",data)
                     this.setState({userLibrary: data.books, tradeOffers: data.trades})
                 })
             } else {
@@ -64,7 +64,6 @@ class UserShowPage extends React.Component {
         fetch(`http://localhost:3000/accept_trade`, {
             method: 'POST',
             headers: {
-
                 'accept': 'application/json', 
                 'content-type': 'application/json',
             },

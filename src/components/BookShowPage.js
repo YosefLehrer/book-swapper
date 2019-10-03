@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Button, Platform, Modal, TouchableHighlight, FlatList, AsyncStorage } from 'react-native';
 import Book from './Book';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 class BookShowPage extends React.Component {
   state = {
@@ -51,8 +51,8 @@ class BookShowPage extends React.Component {
             })
             .then(resp => resp.json())
             .then(data => {
-              console.log(data)
-              this.setState({userLibrary: data})
+              console.log("data with the user library from fetch: ", data)
+              this.setState({userLibrary: data.books})
             })
         } else {
           alert("else from the fetch")
@@ -62,7 +62,7 @@ class BookShowPage extends React.Component {
         }
     }
 
-    offerTrade = () => {
+    offerTrade = (item) => {
       _retrieveData = async () => {
         try {
           const token = await AsyncStorage.getItem('token');
@@ -76,7 +76,7 @@ class BookShowPage extends React.Component {
                 body: JSON.stringify({
                   token: token,
                   requestee_id: this.state.tradeOfferOwnerId,
-                  requester_book: this.state.tradeOfferSelectedBook.id,
+                  requester_book: item.id,
                   requestee_book: this.state.displayedBook
                 })
               })
@@ -111,6 +111,7 @@ class BookShowPage extends React.Component {
     }
     const book = this.props.navigation.state.params.book
     console.log("props in the book show page",this.props)
+    console.log("state in the book show page",this.state)
     return (
       <View style={styles.container}>
          <View style={styles.titleContentContainer}>
@@ -129,7 +130,7 @@ class BookShowPage extends React.Component {
 
         <View style={styles.detailsContentContainer}>
           <Text style={{fontWeight: 'bold'}} >Description: </Text>
-          {this.state.showFullDescription ? <View><Text>{book.description}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show less</Text></TouchableOpacity></View> : <View><Text>{`${book.description.slice(0, 300)}...`}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show more</Text></TouchableOpacity></View>}
+          {this.state.showFullDescription ? <View><ScrollView style={{maxHeight: 650}}><Text>{book.description}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show less</Text></TouchableOpacity></ScrollView></View> : <View><Text>{`${book.description.slice(0, 300)}...`}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show more</Text></TouchableOpacity></View>}
           {/* <Text>{book.description.length > 97 ?`${book.description.slice(0, 97)}...` : book.description}</Text> */}
           <Text><Text style={{fontWeight: 'bold'}}>Pages:</Text> {book.pagecount}</Text>
         </View>
@@ -139,7 +140,7 @@ class BookShowPage extends React.Component {
         animationType="slide"
         transparent={false}
         visible={this.state.modalVisible}
-        onDismiss={() => this.offerTrade()}
+        // onDismiss={() => }
         onRequestClose={() => {
           Alert.alert('Modal has been closed.')
         }}>
@@ -150,10 +151,13 @@ class BookShowPage extends React.Component {
             style={styles.bookshelf}
             data={this.state.userLibrary}
             renderItem={({item}) => {
-              console.log(item)
+              console.log("in the flatlist", item)
               return <View key={item.id}>
                       <Text>{item.title}</Text>
-                      <TouchableOpacity onPress={() => this.setState({modalVisible: false, tradeOfferSelectedBook: item})}>
+                      <TouchableOpacity onPress={() => {
+                        this.setState({modalVisible: false, tradeOfferSelectedBook: item})
+                        this.offerTrade(item)
+                        }}>
                         <Text>select</Text>
                       </TouchableOpacity>
                     </View>
