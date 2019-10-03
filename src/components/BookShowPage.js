@@ -18,7 +18,7 @@ class BookShowPage extends React.Component {
   }
 
   fetchBookData = () => {
-    fetch(`http://localhost:3000/books/${this.props.navigation.state.params.book.googleid}`)
+    fetch(`https://book-swapper-backend.herokuapp.com/books/${this.props.navigation.state.params.book.googleid}`)
     .then(resp => resp.json())
     .then(data => {
       if (data.users !== "No users own this book"){
@@ -43,7 +43,7 @@ class BookShowPage extends React.Component {
       const token = await AsyncStorage.getItem('token');
       console.log("Token ",token)
         if (token !== null) {
-        fetch(`http://localhost:3000/user_library`, {
+        fetch(`https://book-swapper-backend.herokuapp.com/user_library`, {
             headers: {
                 'accept': 'application/json', 
                     Authorization: token
@@ -67,7 +67,7 @@ class BookShowPage extends React.Component {
         try {
           const token = await AsyncStorage.getItem('token');
             if (token !== null) {
-              fetch(`http://localhost:3000/offer_trade`, {
+              fetch(`https://book-swapper-backend.herokuapp.com/offer_trade`, {
                 method: 'POST',
                 headers: {
                   "content-type": 'application/json',
@@ -130,7 +130,7 @@ class BookShowPage extends React.Component {
 
         <View style={styles.detailsContentContainer}>
           <Text style={{fontWeight: 'bold'}} >Description: </Text>
-          {this.state.showFullDescription ? <View><ScrollView style={{maxHeight: 650}}><Text>{book.description}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show less</Text></TouchableOpacity></ScrollView></View> : <View><Text>{`${book.description.slice(0, 300)}...`}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show more</Text></TouchableOpacity></View>}
+          {this.state.showFullDescription ? <View><ScrollView style={{maxHeight: 610}}><Text>{book.description}</Text></ScrollView><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show less</Text></TouchableOpacity></View> : <View><Text>{`${book.description.slice(0, 300)}...`}</Text><TouchableOpacity onPress={this.toggleFullDescription}><Text style={{color: 'rgb(0, 164, 219)'}}>Show more</Text></TouchableOpacity></View>}
           {/* <Text>{book.description.length > 97 ?`${book.description.slice(0, 97)}...` : book.description}</Text> */}
           <Text><Text style={{fontWeight: 'bold'}}>Pages:</Text> {book.pagecount}</Text>
         </View>
@@ -144,21 +144,20 @@ class BookShowPage extends React.Component {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.')
         }}>
-        <View style={{marginTop: 60}}>
-          <View>
-            <Text>Which book would you like to offer?</Text>
+        <View style={styles.modal}>
+          <View style={styles.tradeBookSelectionContainer}>
+            <Text style={styles.modalHeader}>Select the Book would you like to offer?</Text>
           <FlatList
             style={styles.bookshelf}
             data={this.state.userLibrary}
             renderItem={({item}) => {
               console.log("in the flatlist", item)
-              return <View key={item.id}>
-                      <Text>{item.title}</Text>
+              return <View key={item.id} style={styles.tradeBookItem}>
                       <TouchableOpacity onPress={() => {
                         this.setState({modalVisible: false, tradeOfferSelectedBook: item})
                         this.offerTrade(item)
-                        }}>
-                        <Text>select</Text>
+                      }}>
+                      <Text style={{textAlign: 'center', }}>{item.title}</Text>
                       </TouchableOpacity>
                     </View>
             // <Book key={item.id} book={item}title={item.props.book.title}author={item.props.book.author}ISBN={item.props.ISBN}img={item.props.book.img}description={item.props.book.description}publisheddate={item.props.book.publishedDate}pagecount={item.props.book.pageCount}rating={item.props.book.rating}infolink={item.props.book.infoLink}googleid={item.props.book.googleid} navigation={this.props.navigation}/>
@@ -168,7 +167,7 @@ class BookShowPage extends React.Component {
               onPress={() => {
                 this.setState({modalVisible: false})
               }}>
-              <Text>Cancel</Text>
+              <Text style={styles.cancelTradeOffer}>Cancel</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -210,7 +209,39 @@ const styles = StyleSheet.create({
     flex: 1,
     // marginTop: 40,
     // maxWidth: 300,
-  }
+  },
+  modal: {
+    flex: 1,
+    backgroundColor: '#F1D6B8',
+  },
+  modalHeader: {
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  tradeBookSelectionContainer: {
+    marginTop: 50,
+    margin: 20,
+  },
+  tradeBookItem: {
+    flex: 1,
+    flexGrow: 1,
+    padding: 10,
+    maxHeight: 100,
+    marginBottom: 5,
+    backgroundColor: '#99b19c',
+  },
+  cancelTradeOffer: {
+    color: 'white',
+    fontWeight: '800',
+    fontSize: 18,
+    padding: 12,
+    borderRadius: 15,
+    textAlign: "center",
+    backgroundColor: '#FB3640',
+
+  },
 })
 export default BookShowPage
   

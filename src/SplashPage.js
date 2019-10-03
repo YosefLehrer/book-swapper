@@ -13,7 +13,7 @@ class SplashPage extends React.Component {
             try {
           const value = await AsyncStorage.getItem('token');
              if (value !== null) {
-               fetch(`http://localhost:3000/autologin`, {
+               fetch(`https://book-swapper-backend.herokuapp.com/autologin`, {
                    headers: {
                         'accept': 'application/json', 
                             Authorization: value
@@ -22,7 +22,7 @@ class SplashPage extends React.Component {
                     .then(resp=>resp.json())
                     .then(data => {
                         if (data.error){
-                            alert(date.error)
+                            alert(data.error)
                             this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }else {
                             this.props.navigation.navigate('User', {User: data, autoLogin: this.autoLogin})
@@ -35,7 +35,7 @@ class SplashPage extends React.Component {
                     this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                 }
             } catch (error) {
-                alert("user not found")
+                this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
             }
         }
         _retrieveData()

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, Image, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 class Signup extends React.Component {
@@ -19,7 +20,7 @@ class Signup extends React.Component {
             alert('You must reenter your password')
         }else {
             if (this.state.password === this.state.repassword){
-                fetch("http://localhost:3000/users", {
+                fetch("https://book-swapper-backend.herokuapp.com/users", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
@@ -59,35 +60,70 @@ class Signup extends React.Component {
     
     render(){
         return (
-            
-            <View>
-                <TextInput 
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+            <View style={styles.formContainer}>
+                <TextInput
+                style={styles.input}
                 placeholder="username"
                 value={this.state.username}
                 autoCapitalize = 'none'
                 onChangeText={(text) => this.setState({username: text})}
                 />
                 <Text></Text>
-                <TextInput 
+                <TextInput
+                style={styles.input}
                 secureTextEntry={true}
                 placeholder="password"
                 value={this.state.password}
                 onChangeText={(text) => this.setState({password: text})}
                 />
                 <Text></Text>
-                <TextInput 
+                <TextInput
+                style={styles.input}
                 secureTextEntry={true}
                 placeholder="re-enter password"
                 value={this.state.repassword}
                 onChangeText={(text) => this.setState({repassword: text})}
                 />
-                <Button title="Sign Up" onPress={this.handleSignup}/>
+                <TouchableOpacity onPress={this.handleSignup} style={styles.loginButton}>
+                    <Text>Sign Up</Text>
+                </TouchableOpacity>
                 <Text>Already have an account? </Text>
-                <Button title="Login" onPress={() => this.props.navigation.navigate('Login', {autoLogin: this.props.autoLogin})}/>
+                <Button title="Login" onPress={() => this.props.navigation.navigate('Login', {autoLogin: this.props.navigation.state.params.autoLogin})}/>
             </View>
+            </KeyboardAvoidingView>
     );
 
     }
 }
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      // textAlign: 'center'
+    },
+    formContainer: {
+      // textAlign: 'left',
+      flexGrow: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#55efc4'
+    },
+    input: {
+      // height: 40,
+      fontSize: 18,
+      // borderRadius: 13,
+      backgroundColor: 'rgba(85,239,196,0.8)',
+      paddingVertical: 15,
+      // paddingHorizontal: 100,
+      width: 300,
+    },
+    loginButton: {
+      backgroundColor: '#00b894',
+      paddingVertical: 15,
+      paddingHorizontal: 100,
+      marginTop: 15,
+      fontWeight: '700',
+    }
+  });
 
 export default Signup

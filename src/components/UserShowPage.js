@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, AsyncStorage, Button, FlatList, StyleSheet, ActionSheetIOS } from 'react-native'
+import { View, Text, AsyncStorage, Button, FlatList, StyleSheet, ActionSheetIOS, Platform } from 'react-native'
 import {connect} from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
@@ -10,17 +10,19 @@ class UserShowPage extends React.Component {
    state = {
        nothing: null,
        userLibrary: [],
-       tradeOffers: []
+       tradeOffers: [],
+       needFetch: false,
    }
    componentDidMount(){
        this.getUserLibrary()
    }
+
    getUserLibrary = () => {
     _retrieveData = async () => {
         try {
         const token = await AsyncStorage.getItem('token');
             if (token !== null) {
-            fetch(`http://localhost:3000/user_library`, {
+            fetch(`https://book-swapper-backend.herokuapp.com/user_library`, {
                 headers: {
                     'accept': 'application/json', 
                         Authorization: token
@@ -41,27 +43,36 @@ class UserShowPage extends React.Component {
        _retrieveData()
    }
    handleLogout = () => {
-       
-       ActionSheetIOS.showActionSheetWithOptions(
-           {
-               options: ['Cancel', 'Logout'],
-               destructiveButtonIndex: 1,
-               cancelButtonIndex: 0,
-            },
-            (buttonIndex) => {
-                if (buttonIndex === 1) {
-                AsyncStorage.removeItem('token')
-            .then(data => {
-                this.setState({nothing: null})
-                this.props.navigation.navigate('Login', {autoLogin: this.props.navigation.state.params.autoLogin})
-            })
-                }
-            },
-    );
+       if(Platform.OS === "ios"){
+           ActionSheetIOS.showActionSheetWithOptions(
+               {
+                   options: ['Cancel', 'Logout'],
+                   destructiveButtonIndex: 1,
+                   cancelButtonIndex: 0,
+                },
+                (buttonIndex) => {
+                    if (buttonIndex === 1) {
+                        removeToken = async () => {
+                            await AsyncStorage.removeItem('token')
+                        }
+                        removeToken()
+                    this.setState({nothing: null})
+                    this.props.navigation.navigate('Login', {autoLogin: this.props.navigation.state.params.autoLogin})
+                    }
+                },
+        )
+       } else {
+        removeToken = async () => {
+            await AsyncStorage.removeItem('token')
+        }
+        removeToken()
+    this.setState({nothing: null})
+    this.props.navigation.navigate('Login', {autoLogin: this.props.navigation.state.params.autoLogin})
+       }
 }
 
     handleAcceptingTrade = (tradeObject) => {
-        fetch(`http://localhost:3000/accept_trade`, {
+        fetch(`https://book-swapper-backend.herokuapp.com/accept_trade`, {
             method: 'POST',
             headers: {
                 'accept': 'application/json', 
@@ -70,7 +81,7 @@ class UserShowPage extends React.Component {
             body: JSON.stringify(tradeObject)
         })
         .then(resp => resp.json())
-        .then(data => console.log(data))
+        .then(data => this.getUserLibrary())
     }
 
    render(){
@@ -110,7 +121,7 @@ class UserShowPage extends React.Component {
                     }}
                     />
                     </View>
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {User: user, getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin})} >
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {User: user, getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin, getUserLibrary: this.getUserLibrary})} >
                        <Text style={{textAlign: 'center'}} >Search a Book</Text>
                    </TouchableOpacity>
                    <Button title="logout" onPress={this.handleLogout}/>

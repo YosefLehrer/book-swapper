@@ -14,7 +14,7 @@ class Login extends React.Component {
       if(!this.state.username || !this.state.password){
        alert('Username and/or password cannot be blank')
         } else {
-          fetch("http://localhost:3000/login", {
+          fetch("https://book-swapper-backend.herokuapp.com/login", {
             method: "POST",
             headers: {
               "Accept": "application/json",
@@ -32,7 +32,6 @@ class Login extends React.Component {
             } else {
               AsyncStorage.setItem('token', data.token)
               .then(resp => {
-                console.log("IN THE LOGIN PROPS", resp, this.props.navigation)
                 this.props.navigation.state.params.autoLogin()
               })
                   }
@@ -70,7 +69,7 @@ class Login extends React.Component {
               <TouchableOpacity onPress={this.handleLogin} style={styles.loginButton}>
                 <Text>Login</Text>
               </TouchableOpacity>
-              <Button title="Sign Up" onPress={() => this.props.navigation.navigate('Signup', {autoLogin: this.props.autoLogin})}/>
+              <Button title="Sign Up" onPress={() => this.props.navigation.navigate('Signup', {autoLogin: this.props.navigation.state.params.autoLogin})}/>
               </View>
             </KeyboardAvoidingView>
     );
@@ -90,11 +89,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#55efc4'
   },
   input: {
-    height: 40,
+    // height: 40,
+    fontSize: 18,
     // borderRadius: 13,
-    backgroundColor: 'red',//'rgba(85,239,196,0.8)',
+    backgroundColor: 'rgba(85,239,196,0.8)',
     paddingVertical: 15,
-    paddingHorizontal: 100
+    // paddingHorizontal: 100,
+    width: 300,
   },
   loginButton: {
     backgroundColor: '#00b894',
