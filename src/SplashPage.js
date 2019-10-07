@@ -13,7 +13,7 @@ class SplashPage extends React.Component {
             try {
           const value = await AsyncStorage.getItem('token');
              if (value !== null) {
-               fetch(`http://localhost:3000/autologin`, {
+               fetch(`https://book-swapper-backend.herokuapp.com/autologin`, {
                    headers: {
                         'accept': 'application/json', 
                             Authorization: value

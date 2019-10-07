@@ -25,7 +25,7 @@ class UserShowPage extends React.Component {
         try {
         const token = await AsyncStorage.getItem('token');
             if (token !== null) {
-            fetch(`http://localhost:3000/user_library`, {
+            fetch(`https://book-swapper-backend.herokuapp.com/user_library`, {
                 headers: {
                     'accept': 'application/json', 
                         Authorization: token
@@ -46,10 +46,9 @@ class UserShowPage extends React.Component {
    }
 
    getNYTBestsellers = () => {
-    fetch(`http://localhost:3000/nyt_bestsellers`)
+    fetch(`https://book-swapper-backend.herokuapp.com/nyt_bestsellers`)
       .then(resp => resp.json())
       .then(data => {
-          console.log(data)
           this.setState({NYTBestsellers: data})
       })
    }
@@ -84,7 +83,7 @@ class UserShowPage extends React.Component {
 }
 
     handleAcceptingTrade = (tradeObject) => {
-        fetch(`http://localhost:3000/accept_trade`, {
+        fetch(`https://book-swapper-backend.herokuapp.com/accept_trade`, {
             method: 'POST',
             headers: {
                 'accept': 'application/json', 
@@ -141,7 +140,6 @@ class UserShowPage extends React.Component {
                         horizontal={true}
                         data={this.state.NYTBestsellers.fiction}
                         renderItem={({item}) => {
-                            console.log(item)
                         return <Book key={item.id} book={item}title={item.title}author={item.author}img={item.img}description={item.description}publisheddate={item.publishedDate}pagecount={item.pageCount}rating={item.rating}infolink={item.infoLink}googleid={item.googleid} navigation={this.props.navigation}/>
                         }}
                         />
@@ -152,7 +150,6 @@ class UserShowPage extends React.Component {
                         horizontal={true}
                         data={this.state.NYTBestsellers.nonfiction}
                         renderItem={({item}) => {
-                            console.log(item)
                         return <Book key={item.id} book={item}title={item.title}author={item.author}img={item.img}description={item.description}publisheddate={item.publishedDate}pagecount={item.pageCount}rating={item.rating}infolink={item.infoLink}googleid={item.googleid} navigation={this.props.navigation}/>
                         }}
                         />

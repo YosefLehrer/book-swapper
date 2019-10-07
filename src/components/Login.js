@@ -14,7 +14,7 @@ class Login extends React.Component {
       if(!this.state.username || !this.state.password){
        alert('Username and/or password cannot be blank')
         } else {
-          fetch("http://localhost:3000/login", {
+          fetch("https://book-swapper-backend.herokuapp.com/login", {
             method: "POST",
             headers: {
               "Accept": "application/json",

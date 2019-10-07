@@ -20,7 +20,7 @@ class Signup extends React.Component {
             alert('You must reenter your password')
         }else {
             if (this.state.password === this.state.repassword){
-                fetch("http://localhost:3000/users", {
+                fetch("https://book-swapper-backend.herokuapp.com/users", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",

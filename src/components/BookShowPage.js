@@ -18,7 +18,7 @@ class BookShowPage extends React.Component {
   }
 
   fetchBookData = () => {
-    fetch(`http://localhost:3000/books/${this.props.navigation.state.params.book.googleid}`)
+    fetch(`https://book-swapper-backend.herokuapp.com/books/${this.props.navigation.state.params.book.googleid}`)
     .then(resp => resp.json())
     .then(data => {
       if (data.users !== "No users own this book"){
@@ -41,7 +41,7 @@ class BookShowPage extends React.Component {
     try {
       const token = await AsyncStorage.getItem('token');
         if (token !== null) {
-        fetch(`http://localhost:3000/user_library`, {
+        fetch(`https://book-swapper-backend.herokuapp.com/user_library`, {
             headers: {
                 'accept': 'application/json', 
                     Authorization: token
@@ -64,7 +64,7 @@ class BookShowPage extends React.Component {
         try {
           const token = await AsyncStorage.getItem('token');
             if (token !== null) {
-              fetch(`http://localhost:3000/offer_trade`, {
+              fetch(`https://book-swapper-backend.herokuapp.com/offer_trade`, {
                 method: 'POST',
                 headers: {
                   "content-type": 'application/json',
