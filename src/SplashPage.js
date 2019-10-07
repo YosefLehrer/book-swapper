@@ -13,7 +13,7 @@ class SplashPage extends React.Component {
             try {
           const value = await AsyncStorage.getItem('token');
              if (value !== null) {
-               fetch(`https://book-swapper-backend.herokuapp.com/autologin`, {
+               fetch(`http://localhost:3000/autologin`, {
                    headers: {
                         'accept': 'application/json', 
                             Authorization: value
@@ -22,6 +22,7 @@ class SplashPage extends React.Component {
                     .then(resp=>resp.json())
                     .then(data => {
                         if (data.error){
+                            console.log("IN autoLogin FROM splashPage", data)
                             alert(data.error)
                             this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }else {

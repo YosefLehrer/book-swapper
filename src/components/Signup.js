@@ -20,7 +20,7 @@ class Signup extends React.Component {
             alert('You must reenter your password')
         }else {
             if (this.state.password === this.state.repassword){
-                fetch("https://book-swapper-backend.herokuapp.com/users", {
+                fetch("http://localhost:3000/users", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
@@ -42,11 +42,9 @@ class Signup extends React.Component {
                             try {
                                 await AsyncStorage.setItem('token', data.token);
                             } catch (error) {
-                                console.log("Async setItem error")
                             }
                         }
                         _storeData()
-                        console.log(this.props)
                         this.props.autoLogin()
                     }
                 })

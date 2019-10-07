@@ -18,7 +18,7 @@ class BookShowPage extends React.Component {
   }
 
   fetchBookData = () => {
-    fetch(`https://book-swapper-backend.herokuapp.com/books/${this.props.navigation.state.params.book.googleid}`)
+    fetch(`http://localhost:3000/books/${this.props.navigation.state.params.book.googleid}`)
     .then(resp => resp.json())
     .then(data => {
       if (data.users !== "No users own this book"){
@@ -32,7 +32,6 @@ class BookShowPage extends React.Component {
   }
 
   toggleModal = (bookOwnerId) => {
-    console.log(bookOwnerId)
     this._retrieveData()
     this.setState({modalVisible: true, tradeOfferOwnerId: bookOwnerId})
   }
@@ -41,9 +40,8 @@ class BookShowPage extends React.Component {
   _retrieveData = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      console.log("Token ",token)
         if (token !== null) {
-        fetch(`https://book-swapper-backend.herokuapp.com/user_library`, {
+        fetch(`http://localhost:3000/user_library`, {
             headers: {
                 'accept': 'application/json', 
                     Authorization: token
@@ -51,7 +49,6 @@ class BookShowPage extends React.Component {
             })
             .then(resp => resp.json())
             .then(data => {
-              console.log("data with the user library from fetch: ", data)
               this.setState({userLibrary: data.books})
             })
         } else {
@@ -67,7 +64,7 @@ class BookShowPage extends React.Component {
         try {
           const token = await AsyncStorage.getItem('token');
             if (token !== null) {
-              fetch(`https://book-swapper-backend.herokuapp.com/offer_trade`, {
+              fetch(`http://localhost:3000/offer_trade`, {
                 method: 'POST',
                 headers: {
                   "content-type": 'application/json',
@@ -110,8 +107,6 @@ class BookShowPage extends React.Component {
     })
     }
     const book = this.props.navigation.state.params.book
-    console.log("props in the book show page",this.props)
-    console.log("state in the book show page",this.state)
     return (
       <View style={styles.container}>
          <View style={styles.titleContentContainer}>
@@ -151,7 +146,6 @@ class BookShowPage extends React.Component {
             style={styles.bookshelf}
             data={this.state.userLibrary}
             renderItem={({item}) => {
-              console.log("in the flatlist", item)
               return <View key={item.id} style={styles.tradeBookItem}>
                       <TouchableOpacity onPress={() => {
                         this.setState({modalVisible: false, tradeOfferSelectedBook: item})
@@ -230,6 +224,7 @@ const styles = StyleSheet.create({
     padding: 10,
     maxHeight: 100,
     marginBottom: 5,
+    borderRadius: 15,
     backgroundColor: '#99b19c',
   },
   cancelTradeOffer: {

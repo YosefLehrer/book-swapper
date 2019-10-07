@@ -12,7 +12,7 @@ class SearchPage extends Component {
     }
 
     handleSearch = () => {
-        fetch(`https://book-swapper-backend.herokuapp.com/books/search/q=${this.state.searchTerm}`)
+        fetch(`http://localhost:3000/books/search/q=${this.state.searchTerm}`)
         .then(resp => resp.json())
         .then(data => {
             this.setState({books: data, searchTerm: ""})
@@ -22,12 +22,11 @@ class SearchPage extends Component {
 
     handleAddingToLibrary = (paramsBook) => {
         const book = paramsBook.navigation.state.params.book
-        console.log(this.props)
       _retrieveData = async () => {
         try {
           const token = await AsyncStorage.getItem('token')
             if (token !== null) {
-              fetch(`https://book-swapper-backend.herokuapp.com/owned_books`, {
+              fetch(`http://localhost:3000/owned_books`, {
                 method: 'POST',
                 headers: {
                     "accept": 'application/json',

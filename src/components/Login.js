@@ -14,7 +14,7 @@ class Login extends React.Component {
       if(!this.state.username || !this.state.password){
        alert('Username and/or password cannot be blank')
         } else {
-          fetch("https://book-swapper-backend.herokuapp.com/login", {
+          fetch("http://localhost:3000/login", {
             method: "POST",
             headers: {
               "Accept": "application/json",
@@ -31,11 +31,11 @@ class Login extends React.Component {
               alert(data.error)
             } else {
               AsyncStorage.setItem('token', data.token)
-              .then(resp => {
-                this.props.navigation.state.params.autoLogin()
-              })
-                  }
-              })
+                .then(resp => {
+                  this.props.navigation.state.params.autoLogin()
+                })
+            }
+          })
           .catch(() => alert('Sorry, something went wrong in the login process'))
         }
     }

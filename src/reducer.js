@@ -9,7 +9,6 @@ function rootReducer(state = defaultState, action){
         case "DECREASE":
             return {...state, counter: state.counter-1}
         case "SAVEUSER":
-            console.log("This is working")
             return {...state, user: action.payload}
         default: 
             return state
