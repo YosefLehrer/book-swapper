@@ -15,6 +15,7 @@ class UserShowPage extends React.Component {
        NYTBestsellers: [],
    }
    componentDidMount(){
+    //    FOR DEPOLOYMENT ONLY (FAKE WEBSOCKETS)
     //    this.timer = setInterval(() => this.getUserLibrary(), 3000)
        this.getUserLibrary()
        this.getNYTBestsellers()
@@ -46,7 +47,7 @@ class UserShowPage extends React.Component {
    }
 
    getNYTBestsellers = () => {
-    fetch(`https://book-swapper-backend.herokuapp.com/nyt_bestsellers`)
+    fetch(`http://localhost:3000/nyt_bestsellers`)
       .then(resp => resp.json())
       .then(data => {
           this.setState({NYTBestsellers: data})
@@ -64,7 +65,7 @@ class UserShowPage extends React.Component {
                 (buttonIndex) => {
                     if (buttonIndex === 1) {
                         removeToken = async () => {
-                            await AsyncStorage.removeItem('token')
+                            await AsyncStorage.removeItem('token')//AsyncStorage.clear()
                         }
                         removeToken()
                     this.setState({nothing: null})
@@ -96,13 +97,13 @@ class UserShowPage extends React.Component {
     }
 
    render(){
-       const user = this.props.navigation.state.params.User.user_name
+    //    const user = this.props.navigation.state.params.User.user_name
        const mappedUserLibrary = this.state.userLibrary.map(book => {
            return <Book key={book.id} book={book} handleAddingToLibrary={this.handleAddingToLibrary} />
        })
            return (
                <View style={styles.container}>
-                   <Text>Hi {user}</Text>
+                   {/* <Text>Hi {user}</Text> */}
                    <ScrollView>
                    <Text>Your Library:</Text>
                    <View style={styles.bookshelf}>
@@ -155,7 +156,9 @@ class UserShowPage extends React.Component {
                         />
                     </View>
                     </ScrollView>
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {User: user, getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin, getUserLibrary: this.getUserLibrary})} >
+                    {/* THIS BELONGS IN THE NAVIGATE TO SEARCH */}
+                    {/* User: user,  */}
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin, getUserLibrary: this.getUserLibrary})} >
                        <Text style={{textAlign: 'center'}} >Search a Book</Text>
                    </TouchableOpacity>
                    <Button title="logout" onPress={this.handleLogout}/>

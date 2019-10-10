@@ -1,7 +1,6 @@
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
-import React from 'react'
-import {View, Image} from 'react-native'
+import { createSwitchNavigator } from 'react-navigation'
 
 import SplashPage from './SplashPage'
 import UserShowPage from './components/UserShowPage'
@@ -12,41 +11,17 @@ import BookShowPage from './components/BookShowPage'
 
 
 const AppNavigator = createStackNavigator({
-    Home: {
-        screen: SplashPage,
-        navigationOptions: () => ({
-          headerBackImage: <Image source={require('./images/baseline_exit_to_app_black_18dp.png')} />,
-          headerBackTitle: null,
-          headerLeft: <View>{null}</View>
-        }),
-    },
     User: {
-        screen: UserShowPage,
-        navigationOptions: () => ({
-          headerBackImage: <Image source={require('./images/baseline_exit_to_app_black_18dp.png')} />,
-          headerBackTitle: null,
-          headerLeft: <View>{null}</View>
-        }),
+        screen: UserShowPage
     },
     Search: {
         screen: SearchPage,
-    },
-    Login: {
-        screen: Login,
-        navigationOptions: () => ({
-          headerBackImage: <Image source={require('./images/baseline_exit_to_app_black_18dp.png')} />,
-          headerBackTitle: null,
-          headerLeft: <View>{null}</View>
-        }),
-    },
-    Signup: {
-        screen: Signup
     },
     BookShowPage: {
       screen: BookShowPage
     }
   }, {
-    initialRouteName: 'Home',
+    initialRouteName: 'User',
     defaultNavigationOptions: {
         headerStyle: {
           backgroundColor: '#00b894',
@@ -58,6 +33,45 @@ const AppNavigator = createStackNavigator({
         },
       },
   });
+const AuthNavigator = createStackNavigator({
+  Login: {
+    screen: Login,
+  },
+  Signup: {
+    screen: Signup
+  },
+},
+{
+  initialRouteName: 'Login',
+  defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#00b894',
+      },
+      title: `Book Swapper`,
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
+})
   
-  
-export default createAppContainer(AppNavigator)
+export default createAppContainer(createSwitchNavigator(
+  {
+    AuthLoading: SplashPage,
+    App: AppNavigator,
+    Auth: AuthNavigator,
+  },
+  {
+    initialRouteName: 'AuthLoading',
+    defaultNavigationOptions: {
+        headerStyle: {
+          backgroundColor: '#00b894',
+        },
+        title: `Book Swapper`,
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+  }
+))

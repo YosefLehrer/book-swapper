@@ -24,7 +24,7 @@ class SplashPage extends React.Component {
                         if (data.error){
                             console.log("IN autoLogin FROM splashPage", data)
                             alert(data.error)
-                            this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
+                            this.props.navigation.navigate('App', {autoLogin: this.autoLogin})
                         }else {
                             this.props.navigation.navigate('User', {User: data, autoLogin: this.autoLogin})
                             // this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
