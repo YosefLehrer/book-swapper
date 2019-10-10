@@ -22,11 +22,11 @@ class SplashPage extends React.Component {
                     .then(resp=>resp.json())
                     .then(data => {
                         if (data.error){
-                            console.log("IN autoLogin FROM splashPage", data)
                             alert(data.error)
                             this.props.navigation.navigate('App', {autoLogin: this.autoLogin})
                         }else {
-                            this.props.navigation.navigate('User', {User: data, autoLogin: this.autoLogin})
+                            this.props.saveUser(data)
+                            this.props.navigation.navigate('User', {autoLogin: this.autoLogin})
                             // this.props.navigation.navigate('Login', {autoLogin: this.autoLogin})
                         }
                     }
@@ -72,8 +72,8 @@ const msp = (state) => {
     return {user: state.user}
 }
 
-const mdp = () => {
-    return {saveUser: (data) => dispatch({type: "SAVEUSER", payload: data})}
+const mdp = (dispatch) => {
+    return {saveUser: (data) => dispatch({type: "SAVE USER", payload: data})}
 }
 
 export default connect(msp, mdp)(SplashPage)

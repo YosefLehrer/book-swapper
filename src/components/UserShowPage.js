@@ -65,7 +65,7 @@ class UserShowPage extends React.Component {
                 (buttonIndex) => {
                     if (buttonIndex === 1) {
                         removeToken = async () => {
-                            await AsyncStorage.removeItem('token')//AsyncStorage.clear()
+                            await AsyncStorage.clear()//AsyncStorage.removeItem('token')
                         }
                         removeToken()
                     this.setState({nothing: null})
@@ -97,13 +97,13 @@ class UserShowPage extends React.Component {
     }
 
    render(){
-    //    const user = this.props.navigation.state.params.User.user_name
+       const user = this.props.user.user_name
        const mappedUserLibrary = this.state.userLibrary.map(book => {
            return <Book key={book.id} book={book} handleAddingToLibrary={this.handleAddingToLibrary} />
        })
            return (
                <View style={styles.container}>
-                   {/* <Text>Hi {user}</Text> */}
+                   <Text>Hi {user}</Text>
                    <ScrollView>
                    <Text>Your Library:</Text>
                    <View style={styles.bookshelf}>
@@ -156,9 +156,7 @@ class UserShowPage extends React.Component {
                         />
                     </View>
                     </ScrollView>
-                    {/* THIS BELONGS IN THE NAVIGATE TO SEARCH */}
-                    {/* User: user,  */}
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin, getUserLibrary: this.getUserLibrary})} >
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Search', {User: user, getUserLibrary: this.getUserLibrary, autoLogin: this.props.autoLogin, getUserLibrary: this.getUserLibrary})} >
                        <Text style={{textAlign: 'center'}} >Search a Book</Text>
                    </TouchableOpacity>
                    <Button title="logout" onPress={this.handleLogout}/>
@@ -203,6 +201,9 @@ class UserShowPage extends React.Component {
      },
  })
 const msp = (state) => {
-    return {user: state.user}
+    return {user: state.handleUser.user}
+}
+const mdp = (dispatch) => {
+    return {blah: "blah"}
 }
 export default connect(msp)(UserShowPage)
