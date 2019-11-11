@@ -5,6 +5,7 @@ import thunk from 'redux-thunk'
 
 import AppNavigator from './src/AppNavigator'
 import rootReducer from './src/reducer'
+console.disableYellowBox = true
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
